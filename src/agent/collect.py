@@ -81,7 +81,7 @@ class Collect:
 
 
 
-	''' 输出为JSON '''
+	''' 系统数据输出为JSON '''
 	def diskinfo2json(self):
 		self.collect_disk_info()
 		return json.dumps(self.dict_disk_info)
