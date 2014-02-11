@@ -4,6 +4,8 @@
 import zmq
 import json
 
+import log
+
 ''' 下载系统数据采集的配置 '''
 class Config:
 
@@ -16,6 +18,9 @@ class Config:
 		self.collect_loadavg = 0
 		self.collect_interval = 3
 
+		log.set_logger(limit = 1024)
+		log.set_logger(level = 'DEBUG')
+
 	def load_config(self):
 		try:
 			zmq_ctx = zmq.Context()
@@ -23,6 +28,9 @@ class Config:
 			socket.connect("tcp://127.0.0.1:9988")
 			socket.send("download_config")
 			json_config = socket.recv()
+
+			log.info(json_config)
+
 			socket.close()
 
 			dict_config = json.loads(json_config)
@@ -44,3 +52,5 @@ class Config:
 			self.collect_interval 		= 3
 
 
+if __name__ == "__main__":
+	Config().load_config()

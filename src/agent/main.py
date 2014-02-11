@@ -1,6 +1,5 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-# 
 
 import time
 import os
@@ -11,9 +10,17 @@ import collect
 import daemon
 import config
 
+import log
+
+log.set_logger(limit = 1024)
+log.set_logger(level = 'DEBUG')
+
 ''' 数据采集任务守护进程 '''
 class CollectDaemon(daemon.Daemon):
+
     def _run(self):
+
+    	log.info("数据采集任务守护进程启动")
 
     	obj = config.Config()
     	obj.load_config()
@@ -40,10 +47,12 @@ class CollectDaemon(daemon.Daemon):
 
         data_sender.close()
 
+        log.info("数据采集任务守护进程停止")
+
+
 
 #程序入口
 if __name__ == "__main__":
-
     daemon = CollectDaemon('/tmp/daemon-collect.pid')
 
     if len(sys.argv) == 2:
