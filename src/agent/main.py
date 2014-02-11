@@ -2,25 +2,41 @@
 # -*- coding: utf-8 -*-
 # 
 
-import net
-import collect
-import daemon
 import time
 import os
 import sys
 
+import net
+import collect
+import daemon
+import config
 
 ''' 数据采集任务守护进程 '''
 class CollectDaemon(daemon.Daemon):
     def _run(self):
+
+    	obj = config.Config()
+    	obj.load_config()
+
     	collector = collect.Collect()
     	data_sender = net.DataSender()
     	data_sender.connect("tcp://127.0.0.1:8899")
 
         while True:
         	#每隔一段时间将数据上报
-            time.sleep(3)
-            data_sender.send_data(collector.loadavg2json())
+            time.sleep(obj.collect_interval)
+
+            if 1 == obj.collect_mem_info:
+            	data_sender.send_data(collector.meminfo2json())
+
+            if 1 == obj.collect_disk_info:
+            	data_sender.send_data(collector.diskinfo2json())
+
+            if 1 == obj.collect_process_info:
+            	data_sender.send_data(collector.processinfo2json())
+
+            if 1 == obj.collect_loadavg:
+            	data_sender.send_data(collector.loadavg2json())
 
         data_sender.close()
 
