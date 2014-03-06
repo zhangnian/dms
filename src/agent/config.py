@@ -15,7 +15,7 @@ class Config:
 		self.collect_mem_info = 0
 		self.collect_disk_info = 0
 		self.collect_network_info = 0
-		self.collect_loadavg = 0
+		self.collect_loadavg = 1
 		self.collect_interval = 3
 
 		log.set_logger(limit = 1024)
@@ -23,17 +23,6 @@ class Config:
 
 	def load_config(self):
 		try:
-			zmq_ctx = zmq.Context()
-			socket = zmq_ctx.socket(zmq.REQ)
-			socket.connect("tcp://127.0.0.1:9988")
-			socket.send("download_config")
-			json_config = socket.recv()
-
-			log.info(json_config)
-
-			socket.close()
-
-			dict_config = json.loads(json_config)
 			self.collect_interval 		= dict_config["collect_interval"]
 			self.collect_cpu_info 		= dict_config["collect_cpu"]
 			self.collect_process_info 	= dict_config["collect_process"]

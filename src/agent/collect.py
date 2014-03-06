@@ -1,4 +1,3 @@
-#!/usr/bin/env python 
 # -*- coding: utf-8 -*- 
 
 import os
@@ -39,7 +38,8 @@ class Collect:
 
 			self.dict_mem_info[name] = long(val) * 1024.0
 
-		self.dict_mem_info['MemUsed'] = self.dict_mem_info['MemTotal'] - self.dict_mem_info['MemFree'] - self.dict_mem_info['Buffers']  - self.dict_mem_info['Cached']
+		self.dict_mem_info['MemUsed'] = self.dict_mem_info['MemTotal'] - self.dict_mem_info['MemFree'] - \
+			self.dict_mem_info['Buffers']  - self.dict_mem_info['Cached']
 
 
 	''' 获取CPU的负载信息 ''' 
@@ -84,17 +84,24 @@ class Collect:
 	''' 系统数据输出为JSON '''
 	def diskinfo2json(self):
 		self.collect_disk_info()
-		return json.dumps(self.dict_disk_info)
+		dict_diskinfo = {}
+		dict_diskinfo["diskinfo"] = self.dict_disk_info
+		return json.dumps(dict_diskinfo)
 
 
 	def meminfo2json(self):
 		self.collect_mem_info()
-		return json.dumps(self.dict_mem_info)
+		dict_meminfo = {}
+		dict_meminfo["meminfo"] = self.dict_mem_info
+        
 
 
 	def loadavg2json(self):
 		self.collect_loadavg()
-		return json.dumps(self.loadavg)
+		dict_loadavg = {}
+		dict_loadavg["loadavg"] = self.loadavg
+		
+		return json.dumps(dict_loadavg)
 
 
 	def processinfo2json(self):
@@ -108,4 +115,7 @@ class Collect:
 
 
 if __name__ == "__main__":
-	print Collect().processinfo2json()
+	print Collect().loadavg2json()
+	#print Collect().meminfo2json()
+	#print Collect().diskinfo2json()
+	#print Collect().processinfo2json()
